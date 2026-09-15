@@ -50,6 +50,7 @@ $DOCKER_COMPOSE_CMD up -d
 # 5. Migratsiya va Static fayllarni to'plash
 echo "🔄 Baza migratsiyasi va static fayllar to'planmoqda..."
 sleep 3
+$DOCKER_COMPOSE_CMD exec -T smartcloud python manage.py makemigrations
 $DOCKER_COMPOSE_CMD exec -T smartcloud python manage.py migrate
 $DOCKER_COMPOSE_CMD exec -T smartcloud python manage.py collectstatic --noinput
 
