@@ -53,8 +53,14 @@ sleep 3
 $DOCKER_COMPOSE_CMD exec -T smartcloud python manage.py migrate
 $DOCKER_COMPOSE_CMD exec -T smartcloud python manage.py collectstatic --noinput
 
+# 6. Boshlang'ich Admin (Superuser) yaratish
+echo "👤 Admin foydalanuvchisi tekshirilmoqda..."
+$DOCKER_COMPOSE_CMD exec -T smartcloud python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'admin12345')" || true
+
 echo ""
 echo "================================================================="
 echo "✅ SmartCloud muvaffaqiyatli ishga tushirildi va o'rnatildi!"
 echo "🌐 Server Manzili: http://104.248.43.194:1010"
+echo "🔑 Login: admin"
+echo "🔒 Parol: admin12345"
 echo "================================================================="
