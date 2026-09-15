@@ -1,6 +1,7 @@
 {
-    "cloud_url": "http://127.0.0.1:8080",
-    "school_key": "",
+    "cloud_url": "http://104.248.43.194:1010/api/upload-logs/",
+    "school_key": "92992c7b-d847-43a5-9aa8-4b723f69bec7",
+
     "terminals": [
         {
             "name": "1",

@@ -1,6 +1,7 @@
 # --- CLOUD SERVER SOZLAMALARI ---
 # Serveringiz IP manzili yoki Domeni
-CLOUD_URL = "http://127.0.0.1:8000/api/upload-logs/"
+CLOUD_URL = "http://104.248.43.194:1010/api/upload-logs/"
+
 
 # Har bir maktab uchun Admin paneldan olingan alohida UUID kalit
 SCHOOL_API_KEY = "92992c7b-d847-43a5-9aa8-4b723f69bec7"
