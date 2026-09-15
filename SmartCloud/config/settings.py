@@ -25,9 +25,16 @@ SECRET_KEY = 'django-insecure-sty3g2bt7^*%uekiu1dfip+##zvoa0133(kyc*h)rqwrx$iqex
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-CSRF_TRUSTED_ORIGINS = ['https://smart-school.tunl.uz', 'https://smart-school.tunl.uz/']
+CSRF_TRUSTED_ORIGINS = [
+    'https://smart-school.tunl.uz',
+    'http://104.248.43.194:1010',
+    'http://104.248.43.194',
+    'http://localhost:1010',
+    'http://127.0.0.1:1010'
+]
 
-ALLOWED_HOSTS = ['https://smart-school.tunl.uz', 'smart-school.tunl.uz', '*']
+ALLOWED_HOSTS = ['*']
+
 
 
 # Application definition
@@ -123,9 +130,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'

@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  smartcloud:
+    build: .
+    container_name: smartcloud_app
+    restart: always
+    ports:
+      - "1010:1010"
+    volumes:
+      - ./db.sqlite3:/app/db.sqlite3
+      - ./media:/app/media
+      - ./staticfiles:/app/staticfiles
+    environment:
+      - PYTHONUNBUFFERED=1
