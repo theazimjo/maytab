@@ -1,62 +1,133 @@
 {% extends 'base.html' %}
+{% block title %}O'quvchilar — SmartCloud{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold">👨‍🎓 O'quvchilar ({{ students.count }})</h4>
-    <a href="{% url 'student_create' %}" class="btn btn-primary"><i class="fa fa-plus"></i> Yangi qo'shish</a>
+
+<!-- Statistika -->
+<div class="row g-3 mb-4">
+  <div class="col-sm-4">
+    <div class="card stat-card total">
+      <div class="d-flex align-items-center gap-3">
+        <div style="font-size:2rem;">👥</div>
+        <div>
+          <div class="fw-bold fs-2">{{ total_count }}</div>
+          <div class="small opacity-75">Jami o'quvchilar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card stat-card synced">
+      <div class="d-flex align-items-center gap-3">
+        <div style="font-size:2rem;">✅</div>
+        <div>
+          <div class="fw-bold fs-2">{{ synced_count }}</div>
+          <div class="small opacity-75">Terminalga yuklangan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card stat-card pending">
+      <div class="d-flex align-items-center gap-3">
+        <div style="font-size:2rem;">⏳</div>
+        <div>
+          <div class="fw-bold fs-2">{{ pending_count }}</div>
+          <div class="small">Kutilayotgan</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="card p-3 mb-4">
-    <form method="get" class="d-flex gap-2">
-        <input type="text" name="q" class="form-control" placeholder="Ism, Sinf yoki ID bo'yicha qidirish..." value="{{ query }}">
-        <button type="submit" class="btn btn-outline-secondary">Qidirish</button>
-    </form>
+<!-- Qidiruv -->
+<div class="card p-3 mb-3">
+  <form method="get" class="d-flex gap-2">
+    <input type="text" name="q" class="form-control"
+           placeholder="🔍  Ism yoki Terminal ID bo'yicha qidirish..."
+           value="{{ query }}">
+    {% if query %}
+      <a href="?" class="btn btn-outline-secondary px-3">✕</a>
+    {% endif %}
+  </form>
 </div>
 
-<div class="card table-responsive">
-    <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
-            <tr>
-                <th>Rasm</th>
-                <th>ID</th>
-                <th>F.I.SH</th>
-                <th>Sinf</th>
-                <th>Ota-ona</th>
-                <th>Status</th>
-                <th>Amallar</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for s in students %}
-            <tr>
-                <td>
-                    {% if s.photo %}
-                        <img src="{{ s.photo.url }}" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
-                    {% else %}
-                        <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">
-                            {{ s.full_name|first }}
-                        </div>
-                    {% endif %}
-                </td>
-                <td class="fw-bold text-primary">{{ s.hikvision_id }}</td>
-                <td>{{ s.full_name }}</td>
-                <td><span class="badge bg-info text-dark">{{ s.classroom_name }}</span></td>
-                <td>{{ s.parent.phone|default:"-" }}</td>
-                <td>
-                    {% if s.is_synced %}
-                        <i class="fa-solid fa-check-circle text-success" title="Terminalga yuklangan"></i>
-                    {% else %}
-                        <i class="fa-solid fa-clock text-warning" title="Kutilmoqda..."></i>
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{% url 'student_edit' s.id %}" class="btn btn-sm btn-light text-primary"><i class="fa fa-edit"></i></a>
-                    <a href="{% url 'student_delete' s.id %}" class="btn btn-sm btn-light text-danger"><i class="fa fa-trash"></i></a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="7" class="text-center py-4">O'quvchilar topilmadi</td></tr>
-            {% endfor %}
-        </tbody>
+<!-- Jadval -->
+<div class="card">
+  <div class="table-responsive">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th style="width:56px;">Rasm</th>
+          <th>F.I.SH</th>
+          <th>Terminal ID</th>
+          <th>Holat</th>
+          <th class="text-end">Amallar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in students %}
+        <tr>
+          <td>
+            {% if s.photo %}
+              <img src="{{ s.photo.url }}" width="44" height="44"
+                   class="rounded-circle"
+                   style="object-fit:cover; border: 2px solid #e5e7eb;">
+            {% else %}
+              <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
+                   style="width:44px;height:44px;background:linear-gradient(135deg,#667eea,#764ba2);font-size:18px;">
+                {{ s.full_name|first|upper }}
+              </div>
+            {% endif %}
+          </td>
+          <td>
+            <div class="fw-semibold text-dark">{{ s.full_name }}</div>
+          </td>
+          <td>
+            <span class="badge px-3 py-2"
+                  style="background:#eef2ff;color:#4f46e5;font-size:0.85rem;border-radius:8px;">
+              {{ s.hikvision_id }}
+            </span>
+          </td>
+          <td>
+            {% if s.is_synced %}
+              <span class="badge bg-success-subtle text-success px-3 py-2" style="border-radius:8px;">
+                <i class="fa fa-check me-1"></i> Yuklangan
+              </span>
+            {% else %}
+              <span class="badge bg-warning-subtle text-warning px-3 py-2" style="border-radius:8px;">
+                <i class="fa fa-clock me-1"></i> Kutilmoqda
+              </span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <a href="{% url 'student_edit' s.id %}"
+               class="btn btn-sm btn-outline-primary me-1" title="Tahrirlash">
+              <i class="fa fa-pen"></i>
+            </a>
+            <a href="{% url 'student_delete' s.id %}"
+               class="btn btn-sm btn-outline-danger" title="O'chirish">
+              <i class="fa fa-trash"></i>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center py-5 text-muted">
+            <div style="font-size: 3rem; opacity:0.2;">👨‍🎓</div>
+            {% if query %}
+              <strong>«{{ query }}»</strong> bo'yicha hech narsa topilmadi
+            {% else %}
+              Hozircha o'quvchilar yo'q.
+              <a href="{% url 'student_create' %}" class="d-block mt-2">
+                <i class="fa fa-plus me-1"></i> Birinchi o'quvchini qo'shing
+              </a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
+  </div>
 </div>
+
 {% endblock %}

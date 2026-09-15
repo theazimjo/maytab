@@ -1,71 +1,62 @@
-{% extends 'base.html' %} {% block title %}{{ title }}{% endblock %}
+{% extends 'base.html' %}
+{% block title %}{{ title }} — SmartCloud{% endblock %}
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-8">
-    <div class="card p-4 shadow-sm border-0">
-      <h4 class="mb-4 fw-bold text-primary">{{ title }}</h4>
 
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+<div class="d-flex align-items-center gap-3 mb-4">
+  <a href="{% url 'student_list' %}" class="btn btn-outline-secondary btn-sm px-3">
+    <i class="fa fa-arrow-left"></i>
+  </a>
+  <h5 class="fw-bold mb-0">{{ title }}</h5>
+</div>
 
-        <h6 class="text-muted text-uppercase small fw-bold mb-3">O'quvchi</h6>
-                <div class="row mb-3">
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label">F.I.SH</label>
-                        {{ form.full_name }}
-                    </div>
+<div class="card" style="max-width: 480px;">
+  <div class="card-body p-4">
 
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Sinf</label>
-                        {{ form.classroom }} </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Rasm</label>
-                        {{ form.photo }}
-                    </div>
-                </div>
-
-        <hr class="my-4" />
-
-        <h6 class="text-muted text-uppercase small fw-bold mb-3">Ota-ona</h6>
-        <div class="row bg-light p-3 rounded mx-0">
-          <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold"
-              >Ota-ona Telefoni <span class="text-danger">*</span></label
-            >
-            <input
-              type="text"
-              name="parent_phone"
-              class="form-control"
-              placeholder="+998901234567"
-              required
-              value="{{ student.parent.phone|default:'' }}"
-            />
-            <div class="form-text small">
-              Agar raqam bazada bo'lsa, avtomatik ulanadi.
-            </div>
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Ota-ona F.I.SH</label>
-            <input
-              type="text"
-              name="parent_name"
-              class="form-control"
-              placeholder="Valiyev Toshmat"
-              required
-              value="{{ student.parent.full_name|default:'' }}"
-            />
-          </div>
-        </div>
-
-        <div class="d-flex justify-content-end gap-2 mt-4">
-          <a href="{% url 'student_list' %}" class="btn btn-light"
-            >Bekor qilish</a
-          >
-          <button type="submit" class="btn btn-primary px-4">Saqlash</button>
-        </div>
-      </form>
+    {% if student.photo %}
+    <div class="text-center mb-4">
+      <img src="{{ student.photo.url }}" width="100" height="100"
+           class="rounded-circle"
+           style="object-fit:cover; border: 3px solid #e5e7eb;">
+      <div class="text-muted small mt-2">Joriy rasm. Yangi rasm yuklasangiz o'rinadi.</div>
     </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">
+          F.I.SH <span class="text-danger">*</span>
+        </label>
+        <input type="text"
+               name="full_name"
+               class="form-control form-control-lg"
+               placeholder="Masalan: Ali Valiyev"
+               value="{{ student.full_name|default:'' }}"
+               required autofocus>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Yuz rasmi</label>
+        <input type="file" name="photo" class="form-control"
+               accept="image/jpeg,image/png,image/jpg">
+        <div class="form-text">
+          JPG/PNG, maksimum 10MB (avtomatik 150KB gacha siqiladi — Hikvision uchun)
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary px-4">
+          <i class="fa fa-save me-1"></i>
+          {% if student %}Saqlash{% else %}Qo'shish{% endif %}
+        </button>
+        <a href="{% url 'student_list' %}" class="btn btn-outline-secondary">
+          Bekor qilish
+        </a>
+      </div>
+    </form>
+
   </div>
 </div>
+
 {% endblock %}

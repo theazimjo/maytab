@@ -3,152 +3,117 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Smart School Cloud{% endblock %}</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      rel="stylesheet"
-    />
+    <title>{% block title %}SmartCloud — O'quvchilar{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-      body {
-        background-color: #f8f9fa;
+      * { font-family: 'Inter', sans-serif; }
+      body { background: #f0f4f8; min-height: 100vh; }
+
+      .top-navbar {
+        background: linear-gradient(135deg, #1a1f36 0%, #2d3561 100%);
+        padding: 0 2rem;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
       }
-      .sidebar {
-        min-height: 100vh;
-        background: #2c3e50;
+      .brand {
         color: white;
-      }
-      .sidebar a {
-        color: #bdc3c7;
+        font-weight: 700;
+        font-size: 1.1rem;
         text-decoration: none;
-        display: block;
-        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
       }
-      .sidebar a:hover,
-      .sidebar a.active {
-        background: #34495e;
-        color: white;
-        border-left: 4px solid #3498db;
+      .brand-icon {
+        width: 32px; height: 32px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 16px;
+      }
+      .main-content { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border: none;
+        font-weight: 500;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #5a6fd6, #6a3f9e);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102,126,234,0.4);
       }
       .card {
         border: none;
-        shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
       }
+      .table thead th {
+        background: #f8fafc;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6b7280;
+        border-bottom: 2px solid #e5e7eb;
+        padding: 14px 16px;
+      }
+      .table tbody td {
+        padding: 14px 16px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .table tbody tr:last-child td { border-bottom: none; }
+      .table tbody tr:hover { background: #f9fafb; }
+
+      .stat-card {
+        border-radius: 16px;
+        padding: 1.25rem 1.5rem;
+        color: white;
+        border: none;
+      }
+      .stat-card.total { background: linear-gradient(135deg, #667eea, #764ba2); }
+      .stat-card.synced { background: linear-gradient(135deg, #11998e, #38ef7d); color: #fff; }
+      .stat-card.pending { background: linear-gradient(135deg, #f7971e, #ffd200); color: #333; }
+
+      .alert { border-radius: 12px; border: none; }
     </style>
+    {% block extra_css %}{% endblock %}
   </head>
   <body>
-    <div class="d-flex">
-      <div
-        class="sidebar d-flex flex-column flex-shrink-0 p-3"
-        style="width: 250px"
-      >
-        <a
-          href="/"
-          class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
-        >
-          <i class="fa-solid fa-graduation-cap fa-2x me-2"></i>
-          <span class="fs-4 fw-bold">Smart School</span>
-        </a>
-        <hr />
-        <ul class="nav nav-pills flex-column mb-auto">
-          {% if request.user.is_superuser %}
-          <li class="nav-item">
-            <a href="{% url 'dashboard' %}" class="active">
-              <i class="fa-solid fa-chart-pie me-2"></i> RayONO Dashboard
-            </a>
-          </li>
-          <li>
-            <a href="/admin/core/school/">
-              <i class="fa-solid fa-school me-2"></i> Maktablar
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa-solid fa-file-excel me-2"></i> Umumiy Hisobot
-            </a>
-          </li>
-          <hr class="text-secondary" />
-          {% endif %}
 
-          <li>
-            <a href="{% url 'dashboard' %}">
-              <i class="fa-solid fa-gauge me-2"></i> Maktab Dashboard
-            </a>
-          </li>
-          <li>
-            <a href="{% url 'attendance_report' %}">
-              <i class="fa-solid fa-users me-2"></i> Davomat
-            </a>
-          </li>
-          <li>
-            <a href="{% url 'student_list' %}">
-              <i class="fa-solid fa-users me-2"></i> O'quvchilar
-            </a>
-          </li>
-          <li>
-            <a href="{% url 'employee_list' %}">
-              <i class="fa-solid fa-chalkboard-user me-2"></i> Xodimlar
-            </a>
-          </li>
-          <li>
-            <a href="{% url 'payroll_report' %}">
-              <i class="fa-solid fa-money-bill-wave me-2"></i> Oylik (Payroll)
-            </a>
-          </li>
-        </ul>
-        <hr />
-        <div class="dropdown">
-          <a
-            href="#"
-            class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-            id="dropdownUser1"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i class="fa-solid fa-user-circle fa-2x me-2"></i>
-            <strong>{{ request.user.username }}</strong>
-          </a>
-          <ul
-            class="dropdown-menu dropdown-menu-dark text-small shadow"
-            aria-labelledby="dropdownUser1"
-          >
-            <li><a class="dropdown-item" href="#">Sozlamalar</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#">Chiqish</a></li>
-          </ul>
-        </div>
-      </div>
+    <nav class="top-navbar">
+      <a href="{% url 'student_list' %}" class="brand">
+        <div class="brand-icon">🎓</div>
+        SmartCloud
+      </a>
+      <a href="{% url 'student_create' %}" class="btn btn-primary btn-sm px-3">
+        <i class="fa fa-plus me-1"></i> Yangi o'quvchi
+      </a>
+    </nav>
 
-      <div class="w-100">
-        <nav class="navbar navbar-light bg-white border-bottom px-4 py-3">
-          <span class="navbar-brand mb-0 h1">
-            {% if request.user.is_superuser %} 🏛️ Tuman Xalq Ta'limi Bo'limi 
-            {% else %} 🏫 {{ request.user.profile.school.name }} {% endif %}
-          </span>
-          <span class="text-muted small">{{ now|date:"d-F Y, l" }}</span>
-        </nav>
-
-        <div class="p-4">
-          {% if messages %} {% for message in messages %}
-          <div
-            class="alert alert-{{ message.tags }} alert-dismissible fade show"
-            role="alert"
-          >
+    <div class="main-content">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-3" role="alert">
             {{ message }}
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="alert"
-            ></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
           </div>
-          {% endfor %} {% endif %} {% block content %} {% endblock %}
-        </div>
-      </div>
+        {% endfor %}
+      {% endif %}
+
+      {% block content %}{% endblock %}
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
   </body>
 </html>
