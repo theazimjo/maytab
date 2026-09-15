@@ -31,14 +31,23 @@ echo "🧹 Docker ishlatilmayotgan keshlarni tozalash (Disk joyini bo'shatish)..
 docker system prune -f || true
 docker builder prune -f || true
 
-# 3. Docker Imadjni qurish va Ishga tushirish
+# 3. SQLite baza fayli papka bo'lib qolishining oldini olish
+if [ -d "db.sqlite3" ]; then
+    echo "⚠️ db.sqlite3 papka shaklida topildi, tozalanmoqda..."
+    rm -rf db.sqlite3
+fi
+if [ ! -f "db.sqlite3" ]; then
+    touch db.sqlite3
+fi
+
+# 4. Docker Imadjni qurish va Ishga tushirish
 echo "🛠️ Docker image qurilmoqda..."
 $DOCKER_COMPOSE_CMD build
 
 echo "🟢 Konteyner fon rejimida ishga tushirilmoqda (Port: 1010)..."
 $DOCKER_COMPOSE_CMD up -d
 
-# 4. Migratsiya va Static fayllarni to'plash
+# 5. Migratsiya va Static fayllarni to'plash
 echo "🔄 Baza migratsiyasi va static fayllar to'planmoqda..."
 sleep 3
 $DOCKER_COMPOSE_CMD exec -T smartcloud python manage.py migrate
