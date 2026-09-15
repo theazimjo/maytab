@@ -10,7 +10,8 @@ class Employee(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE, related_name="employees")
     full_name = models.CharField(max_length=255)
     hikvision_id = models.CharField(max_length=20, editable=False)
-    employee_id = models.CharField(max_length=50, editable=False)
+    employee_id = models.CharField(max_length=50, blank=True, null=True, editable=False)
+
     phone = models.CharField(max_length=20)
     photo = models.ImageField(upload_to='staff/', blank=True, null=True)
 
