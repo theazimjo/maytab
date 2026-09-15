@@ -1,20 +1,14 @@
 from django.contrib import admin
+from .models import School, Student
 
-from . import models
-
+@admin.register(School)
 class SchoolAdmin(admin.ModelAdmin):
-    list_display = ('name', 'api_key', 'is_active')
+    list_display = ('name', 'api_key', 'is_active', 'is_online', 'last_activity')
+    readonly_fields = ('api_key', 'last_activity')
 
-admin.site.register(models.School, SchoolAdmin)
-
-
-admin.site.register(models.Shift)
-admin.site.register(models.Classroom)
-admin.site.register(models.Parent)
-admin.site.register(models.UserProfile)
-
-
-@admin.register(models.Student)
+@admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('full_name','hikvision_id' ,'is_synced',)
-    readonly_fields = ['hikvision_id']
+    list_display = ('full_name', 'hikvision_id', 'school', 'is_synced')
+    list_filter = ('school', 'is_synced')
+    search_fields = ('full_name', 'hikvision_id')
+    readonly_fields = ('hikvision_id',)
