@@ -16,8 +16,8 @@ if ! command -v docker &> /dev/null; then
     rm get-docker.sh
 fi
 
-# 2. Eskisini to'xtatish (agar bo'lsa)
-echo "📦 Eski konteynerlarni to'xtatish va tozalash..."
+# 2. Eskisini to'xtatish va Docker disk keshlari hamda ortiqcha xotirani tozalash
+echo "📦 Eski konteynerlarni to'xtatish va disk xotirasini tozalash..."
 if command -v docker-compose &> /dev/null; then
     DOCKER_COMPOSE_CMD="docker-compose"
 else
@@ -26,9 +26,14 @@ fi
 
 $DOCKER_COMPOSE_CMD down || true
 
+# Disk toza bo'lishi uchun ishlatilmayotgan Docker kesh va imedjlarni o'chirish
+echo "🧹 Docker ishlatilmayotgan keshlarni tozalash (Disk joyini bo'shatish)..."
+docker system prune -f || true
+docker builder prune -f || true
+
 # 3. Docker Imadjni qurish va Ishga tushirish
 echo "🛠️ Docker image qurilmoqda..."
-$DOCKER_COMPOSE_CMD build --no-cache
+$DOCKER_COMPOSE_CMD build
 
 echo "🟢 Konteyner fon rejimida ishga tushirilmoqda (Port: 1010)..."
 $DOCKER_COMPOSE_CMD up -d
